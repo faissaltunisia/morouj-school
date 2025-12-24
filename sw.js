@@ -1,33 +1,16 @@
-const CACHE_NAME = 'murooj-v2';
+const CACHE_NAME = 'murooj-v5';
 const assets = [
-  './',
-  './index.html',
-  'https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Tajawal:wght@300;500;800&display=swap'
+  './', './index.html', './style.css', './script.js', './splash.html', './manifest.json',
+  'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2',
+  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css',
+  'https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Tajawal:wght@500;800&display=swap'
 ];
 
-// تثبيت ملفات الكاش الأساسية
-self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(assets);
-    })
-  );
+self.addEventListener('install', (e) => {
+  e.waitUntil(caches.open(CACHE_NAME).then((c) => c.addAll(assets)));
 });
 
-// تفعيل المحرك ومسح الكاش القديم
-self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys().then(keys => {
-      return Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key)));
-    })
-  );
-});
-
-// إدارة الطلبات (توفير السرعة)
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request).then(response => {
-      return response || fetch(event.request);
-    })
-  );
+self.addEventListener('fetch', (e) => {
+  if (e.request.url.includes('supabase.co') || e.request.url.includes('youtube.com')) return;
+  e.respondWith(caches.match(e.request).then((res) => res || fetch(e.request)));
 });
