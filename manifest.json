@@ -1,20 +1,11 @@
-
 {
-  "name": "مقرر التلاوة و الحفظ",
+  "name": "مقرر التلاوة والحفظ - مدرسة المروج",
   "short_name": "المروج",
-  "description": "منصة مدرسة المروج لتلاوة القرآن الكريم",
-  "start_url": "index.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#041a11",
   "theme_color": "#041a11",
-  "orientation": "portrait",
   "icons": [
-    {
-      "src": "https://raw.githubusercontent.com/faissaltunisia/student-grades/main/Screenshot%202025-12-16%20235912.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
     {
       "src": "https://raw.githubusercontent.com/faissaltunisia/student-grades/main/Screenshot%202025-12-16%20235912.png",
       "sizes": "512x512",
