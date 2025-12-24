@@ -3,105 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>منصة مدرسة المُرُوج الرقمية</title>
+    
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#041a11">
-    <title>المنصة الرقمية لمدرسة المُرُوج </title>
     
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Tajawal:wght@300;500;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Tajawal:wght@500;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
     <link rel="stylesheet" href="style.css">
+
+    <script>
+      if (!sessionStorage.getItem('splashed')) {
+        window.location.href = 'splash.html';
+      }
+    </script>
 </head>
 <body>
-    <div id="splash-placeholder"></div>
 
     <div class="ministry-bar">
-        <span>سلطنة عُمَان</span>
-        <span>وزارة التربية والتعليم</span>
-        <span>محافظة ظفار</span>
+        <div class="ministry-info">سلطنة عُمان<br>وزارة التربية والتعليم</div>
+        <div style="text-align: left;">محافظة ظفار<br>مدرسة المروج (5-12)</div>
     </div>
-    
+
     <header class="app-header">
         <div class="logo-box">
-            <img src="https://raw.githubusercontent.com/faissaltunisia/student-grades/main/Screenshot%202025-12-16%20235912.png">
-            <div class="brand-text">
-                <h1> التلاوة و الحفظ </h1>
-                <span id="grade-display" style="color:#fff; opacity:0.7; font-size:0.8rem;">تحميل...</span>
+            <img src="https://raw.githubusercontent.com/faissaltunisia/student-grades/main/Screenshot%202025-12-16%20235912.png" alt="Logo">
+            <div>
+                <h1 style="font-family:'Amiri'; font-size:1.1rem; line-height:1;">تلاوة و حفظ</h1>
+                <small id="cur-g-label" style="opacity:0.7; font-size:0.7rem;"></small>
             </div>
         </div>
-        <button onclick="openModal('modal-grades')" style="background:var(--gold-gradient); border:none; padding:8px 15px; border-radius:10px; font-weight:900; cursor:pointer; font-size:0.75rem;">تبديل الصف</button>
+        <button onclick="showM('m-grades')" class="btn-change-grade">تبديل الصف</button>
     </header>
 
     <main class="main-scroller">
-        <div class="challenge-banner">
+        <div class="challenge-card">
             <div>
-                <small style="color:var(--accent)">تحدي اليوم ⚡</small>
-                <h2 id="challenge-title">...</h2>
+                <small style="color:var(--accent)">تحدي التلاوة اليومي ⚡</small>
+                <p id="ch-title" style="font-weight:bold; font-size:1rem; margin-top:4px;">جاري الاختيار...</p>
             </div>
-            <button onclick="startChallenge()" style="background:var(--gold-gradient); border:none; padding:12px 25px; border-radius:12px; font-weight:900; cursor:pointer;">ابدأ 🚀</button>
+            <button onclick="startCh()" class="btn-start">ابدأ</button>
         </div>
 
-        <div class="sem-box">
-            <button id="sem1" class="sem-btn active" onclick="switchSem(1)">الفصل الدراسي الأول</button>
-            <button id="sem2" class="sem-btn" onclick="switchSem(2)">الفصل الدراسي الثاني</button>
+        <div class="sem-tabs">
+            <button id="s1" class="sem-btn active" onclick="setSem(1)">الفصل الدراسي الأول</button>
+            <button id="s2" class="sem-btn" onclick="setSem(2)">الفصل الدراسي الثاني</button>
         </div>
-        <div id="surah-grid" class="surah-grid"></div>
+        
+        <div id="grid" class="surah-grid"></div>
     </main>
 
-    <div id="player-modal" class="player-modal">
-        <div class="cinema-box">
+    <div id="p-lay" class="player-overlay">
+        <div class="player-container">
             <div class="player-header">
-                <h2 id="video-title" style="color:var(--accent); font-family:'Amiri'; font-size:1.5rem; margin:0;">اسم السورة</h2>
-                <button onclick="closePlayer()" class="close-player-btn"><i class="fa-solid fa-xmark"></i></button>
+                <span id="v-name">...</span>
+                <button onclick="closeV()" class="btn-close">إغلاق X</button>
             </div>
-            <div id="video-box" class="video-container"></div>
-            <div id="progress-hud">
-                <div style="display:flex; justify-content:space-between; margin-bottom:10px; color:#fff; font-size:0.9rem;">
-                    <span>إنجاز التحدي</span>
-                    <span id="pct-text">0%</span>
-                </div>
-                <div style="width:100%; height:10px; background:rgba(255,255,255,0.1); border-radius:10px; overflow:hidden; border: 1px solid var(--accent);">
-                    <div id="fill-bar" style="width:0%; height:100%; background:var(--gold-gradient); transition:0.3s;"></div>
-                </div>
+            <div class="video-wrapper">
+                <video id="v-vid" playsinline></video>
+                <iframe id="v-yt" allow="autoplay; fullscreen"></iframe>
+            </div>
+            <div id="p-hud">
+                <div class="hud-info"><span>نسبة الإنجاز</span><span id="p-text">0%</span></div>
+                <div class="p-bar"><div id="p-fill"></div></div>
+                <p class="hud-note">استمع بتركيز لفتح الجائزة 🎁</p>
             </div>
         </div>
     </div>
 
-    <nav class="bottom-nav">
-        <button class="nav-item active" onclick="location.reload()">
-            <i class="fa-solid fa-house"></i>
-            <span>الرئيسية</span>
+    <nav class="nav-bar">
+        <button class="nav-btn active" onclick="location.reload()"><i class="fa fa-home"></i>الرئيسية</button>
+        <button class="nav-btn" onclick="showM('m-grades')"><i class="fa fa-layer-group"></i>الصفوف</button>
+        <button class="nav-btn" onclick="openPrize()">
+            <div id="dot" class="red-dot"></div>
+            <i class="fa fa-award"></i>الجائزة
         </button>
-        <button class="nav-item" onclick="openModal('modal-grades')">
-            <i class="fa-solid fa-book"></i>
-            <span>الصفوف</span>
-        </button>
-        <button class="nav-item" onclick="openPrize()">
-            <div id="prize-notif" class="badge-count"></div>
-            <i class="fa-solid fa-trophy"></i>
-            <span>الجائزة</span>
-        </button>
-        <button class="nav-item" onclick="openModal('modal-about')">
-            <i class="fa-solid fa-circle-info"></i>
-            <span>عن المنصة</span>
-        </button>
+        <button class="nav-btn" onclick="showM('m-about')"><i class="fa fa-info-circle"></i>عن المنصة</button>
     </nav>
 
-    <div id="modal-grades" class="modal"><div class="modal-card">
-        <h2 style="color:var(--accent); margin-bottom:20px; font-family:'Amiri'; font-size:1.8rem;">قائمة الصفوف</h2>
-        <div id="grades-list" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; max-height:60vh; overflow-y:auto;"></div>
-        <button onclick="closeModal('modal-grades')" style="margin-top:20px; color:var(--accent); background:none; border:none; font-weight:bold; cursor:pointer;">إغلاق</button>
+    <div id="m-grades" class="modal"><div class="modal-body">
+        <h3>اختر صفك الدراسي</h3>
+        <div id="g-list" class="grades-grid"></div>
+        <button onclick="hideM('m-grades')" class="btn-cancel">تراجع</button>
     </div></div>
 
-    <div id="modal-about" class="modal"><div class="modal-card">
-        <h2 style="color:var(--accent); font-family:'Amiri';">المنصة الرقمية لمدرسة المُرُوج</h2>
-        <p style="margin:20px 0; line-height:1.6;">منصة تعليمية رقمية تابعة لمدرسة المروج للتعليم الأساسي بمحافظة ظفار. تهدف المنصة إلى تسخير التقنيات الحديثة لخدمة القرآن الكريم.</p>
-        <button class="grade-btn" onclick="closeModal('modal-about')">شكراً لكم</button>
+    <div id="m-about" class="modal"><div class="modal-body">
+        <h3>منصة مدرسة المروج</h3>
+        <p>مشروع تعليمي تقني لدعم طلاب مدرسة المروج في إتقان تلاوة وحفظ السور المقررة، تحت إشراف الأستاذة: أميرة سعيد الشنفري.</p>
+        <button class="grade-item" style="width:100%; background:var(--accent); color:white;" onclick="hideM('m-about')">شكراً لكم</button>
     </div></div>
 
-    <div id="modal-prize" class="modal"><div class="modal-card" id="prize-content"></div></div>
+    <div id="m-win" class="modal"><div class="modal-body">
+        <div class="win-icon">🎊</div>
+        <h3>بطل المروج!</h3>
+        <p>لقد أتممت التحدي بنجاح مذهل. واصل الحفظ لتنال أعلى الدرجات.</p>
+        <button class="grade-item" style="width:100%; background:var(--accent); color:white;" onclick="hideM('m-win')">استلام الوسام</button>
+    </div></div>
 
+    <div id="m-locked" class="modal"><div class="modal-body" style="border-color: #ff3b30;">
+        <div class="lock-icon">🔒</div>
+        <h3>الجائزة مقفلة!</h3>
+        <p>عذراً بطل المروج، يجب عليك إكمال <b>تحدي التلاوة اليومي</b> أولاً لتتمكن من فتح صندوق الجوائز.</p>
+        <button class="grade-item" style="width:100%; background:var(--primary); border-color:var(--accent); color:var(--accent);" onclick="hideM('m-locked')">فهمت، سأبدأ التحدي</button>
+    </div></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="script.js"></script>
 </body>
 </html>
