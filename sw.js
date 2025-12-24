@@ -1,4 +1,4 @@
-const CACHE_NAME = 'murooj-v5';
+const CACHE_NAME = 'murooj-v6';
 const assets = [
   './', './index.html', './style.css', './script.js', './splash.html', './manifest.json',
   'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2',
