@@ -1,16 +1,49 @@
-const CACHE_NAME = 'murooj-v10';
+const CACHE_NAME = 'murooj-v11'; // قمت بترقية النسخة للتأكد من التحديث
 const assets = [
-  './', './index.html', './style.css', './script.js', './splash.html', './manifest.json', './dua.html',
-  'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2',
-  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css',
-  'https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Tajawal:wght@500;800&display=swap'
+  './',
+  './index.html',
+  './style.css',
+  './script.js',
+  './splash.html',
+  './dua.html',
+  './manifest.json'
 ];
 
+// التثبيت وتخزين الملفات
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(CACHE_NAME).then((c) => c.addAll(assets)));
+  self.skipWaiting(); // إجبار النسخة الجديدة على التفعيل فوراً
+  e.waitUntil(
+    caches.open(CACHE_NAME).then((c) => {
+      console.log('تم تخزين الملفات بنجاح');
+      return c.addAll(assets);
+    })
+  );
 });
 
+// تنظيف الكاش القديم (مهم جداً لظهور التحديثات)
+self.addEventListener('activate', (e) => {
+  e.waitUntil(
+    caches.keys().then((keys) => {
+      return Promise.all(
+        keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k))
+      );
+    })
+  );
+});
+
+// جلب الملفات (Offline Mode)
 self.addEventListener('fetch', (e) => {
-  if (e.request.url.includes('supabase.co') || e.request.url.includes('youtube.com')) return;
-  e.respondWith(caches.match(e.request).then((res) => res || fetch(e.request)));
+  // استثناء روابط قاعدة البيانات والفيديوهات من الكاش
+  if (e.request.url.includes('supabase.co') || e.request.url.includes('youtube.com') || e.request.url.includes('googlevideo')) {
+    return;
+  }
+  
+  e.respondWith(
+    caches.match(e.request).then((res) => {
+      return res || fetch(e.request).catch(() => {
+        // إذا كان المستخدم أوفلاين والملف غير موجود بالكاش
+        console.log('المستخدم غير متصل بالإنترنت');
+      });
+    })
+  );
 });
