@@ -1,16 +1,15 @@
 {
-  "name": "مقرر التلاوة والحفظ ",
+  "name": "منصة المروج",
   "short_name": "منصة المروج",
   "start_url": "splash.html",
   "display": "standalone",
   "background_color": "#3d4c42",
-  "theme_color": "#c4a04d",
+  "theme_color": "#3d4c42",
   "icons": [
     {
       "src": "https://raw.githubusercontent.com/faissaltunisia/student-grades/main/Screenshot%202025-12-16%20235912.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "sizes": "192x192",
+      "type": "image/png"
     }
   ]
 }
