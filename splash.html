@@ -200,6 +200,8 @@
     </div>
 
     <script>
+        // إضافة هذا السطر لتعريف المتصفح أننا مررنا بصفحة الترحيب
+    sessionStorage.setItem('splashed', 'true');
         setTimeout(() => {
             document.body.style.transition = "opacity 1s";
             document.body.style.opacity = "0";
