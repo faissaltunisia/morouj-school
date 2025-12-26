@@ -1,6 +1,6 @@
 const CACHE_NAME = 'murooj-v9';
 const assets = [
-  './', './index.html', './style.css', './script.js', './splash.html', './dua.html',
+  './', './index.html', './style.css', './script.js', './splash.html', './manifest.json', './dua.html',
   'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css',
   'https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Tajawal:wght@500;800&display=swap'
