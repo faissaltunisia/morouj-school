@@ -1,4 +1,4 @@
-const CACHE_NAME = 'murooj-v11'; // قمت بترقية النسخة للتأكد من التحديث
+const CACHE_NAME = 'murooj-v12'; // قمت بترقية النسخة للتأكد من التحديث
 const assets = [
   './',
   './index.html',
